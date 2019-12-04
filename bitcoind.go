@@ -287,9 +287,9 @@ func (b *Bitcoind) GetMiningInfo() (miningInfo MiningInfo, err error) {
 
 // GetNewAddress return a new address for account [account].
 func (b *Bitcoind) GetNewAddress(account ...string) (addr string, err error) {
-	// 0 or 1 account
-	if len(account) > 1 {
-		err = errors.New("Bad parameters for GetNewAddress: you can set 0 or 1 account")
+	// 0 or 1 account with address type
+	if len(account) > 2 {
+		err = errors.New("Bad parameters for GetNewAddress: you can set 0 or 1 account with address type")
 		return
 	}
 	r, err := b.client.call("getnewaddress", account)
@@ -651,7 +651,7 @@ func (b *Bitcoind) SendMany(fromAccount string, amounts map[string]float64, minc
 
 // SenManyBCH send multiple times for BCH
 func (b *Bitcoind) SendManyBCH(amounts map[string]float64, minconf uint32, comment string) (txID string, err error) {
-	r, err := b.client.call("sendmany", []interface{}{amounts, minconf, comment})
+	r, err := b.client.call("sendmany", []interface{}{"", amounts, minconf, comment})
 	if err = handleError(err, &r); err != nil {
 		return
 	}
