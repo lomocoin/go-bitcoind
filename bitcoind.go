@@ -29,6 +29,12 @@ func New(host string, port int, user, passwd string, useSSL bool) (*Bitcoind, er
 	return &Bitcoind{rpcClient}, nil
 }
 
+// JSONRPC any json rpc you want 
+func (b *Bitcoind) JSONRPC(method string, param interface{}) (json.RawMessage, error) {
+	r, err := b.client.call(method, param)
+	return r.Result, err
+}
+
 func (b *Bitcoind) CreateMultiSig(cmd *CreateMultisigCmd) (result CreateMultiSigResult, err error) {
 	r, err := b.client.call("createmultisig", []interface{}{cmd.NRequired, cmd.Keys})
 	if err = handleError(err, &r); err != nil {
